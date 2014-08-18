@@ -1,0 +1,108 @@
+#ifndef _ERROR_NO_H
+#define	_ERROR_NO_H
+
+
+typedef enum {
+	//PROG_NO_ERROR = 0,
+	//PROG_INVALID_IC,
+	//PROG_MULTIPLE_IC,
+	//PROG_WORK_IN_PROGRESS,
+	//PROG_NO_WORK_IN_PROGRESS,
+	//PROG_WRONG_SIZE,
+	//PROG_CONTACT_FAIL,
+	//PROG_NO_IC_IN_SOCKET,
+	//PROG_TOO_MANY_BAD_BLOCKS,
+
+	//PROG_NOT_SUPPORT_DEVICE,
+	//PROG_DEVICE_HASE_PLUG_OUT,
+	//PROG_MEMORY_FAILED,
+	//PROG_SOCKET_NET_ERR,
+	//PROG_NO_ROGMASTER,
+	//PROG_DOWN_BASEUNIT_FAIL,
+	//PROG_DOWN_CARTRIDGE_FAIL,
+	//PROG_DOWN_VECTOR_FAIL,
+	//PROG_CONFIG_POWER_FALL,
+	//PROG_PROGRAM_FAIL,
+	//PROG_RESET_BUS_FAIL,
+	//PROG_DWON_RAMFUNC_FAIL,
+	//PROG_RAM_FUNC_RUNNING,
+	PROG_READ_ID_ERROR,
+	//PROG_SELECT_CHIP_ERROR,
+	PROG_OPEN_DATA_FILE_FAIL,
+	PROG_GET_DATA_FILE_INFO_FAIL,
+	PROG_LOAD_FILE_READ_FAIL,
+	PROG_NOT_LOAD_FILE,
+	PROG_NOT_BLANKED,
+	PROG_VERIFY_ERROR,
+	PROG_PROGRAM_ERROR,
+	PROG_ERASE_ERROR,
+	PROG_CMD_RUNNING,//32
+	PROG_CANNOT_LOAD_RAMFUNC_DLL,
+
+	PROG_USB_COMMUNICATION_FAIL = 0x80,
+	PROG_INVALID_DEVICE,
+	PROG_INVALID_SITE,
+	PROG_CANCELED_BY_USER,
+}err_code_t;
+
+typedef enum {
+	OP_ERR,
+	BASIC_ERR,
+} err_type_t;
+
+#define	E_BASIC_BASE(a)				(a << 0)
+#define	E_BASIC_MASK				0x0000FFFF
+#define	E_OP_BASE(a)				(a << 16)
+#define	E_OP_MASK				0xFFFF0000
+
+/* no error */
+#define	E_OK					E_BASIC_BASE(0
+/* contact test fail */
+#define	E_CONTACT_FAIL				E_BASIC_BASE + 1
+/* the id of chip is incorrect */
+#define	E_INVLAID_IC				E_BASIC_BASE + 2
+/* the encryption or counter is not avalible */
+#define	E_INVALID_SOCKET			E_BASIC_BASE + 3
+/* the device is not the in {PROG_MASTER_X4, PROG_MASTER_X8, PROG_STATR} */
+#define	E_INVALID_DEVICE			E_BASIC_BASE + 4
+/* the device is plug out from the pc */
+#define	E_DEVICE_PLUG_OUT			E_BASIC_BASE + 5
+/* malloc memory failed */
+#define	E_ALLOC_MEMORY_FAIL			E_BASIC_BASE + 6
+/* the socket net occurs error */
+#define	E_NET_ERROR				E_BASIC_BASE + 7
+/* there is no programmer device */
+#define	E_NO_DEVICE				E_BASIC_BASE + 8
+/* file can't be finded */
+#define	E_FILE_NO_EXIST				E_BASIC_BASE + 9
+/* config power fail */
+#define	E_CONFIG_POWER_FAIL			E_BASIC_BASE + 10
+/* reset the bus fail */
+#define	E_RESET_BUS_FAIL			E_BASIC_BASE + 11
+/* ram function is still running */
+#define E_RAM_FUNC_RUNNING			E_BASIC_BASE + 12
+/* config file has Grammar mistakes */
+#define	E_XML_PARSE_FAIL			E_BASIC_BASE + 13
+
+
+/* down load base unit fail */
+#define	E_DOWN_BASEUNIT_FAIL			E_OP_BASE + 0
+/* down load cartridge fail */
+#define	E_DOWN_CARTRIDGE_FAIL			E_OP_BASE + 1
+/* down vector fail */
+#define	E_DOWN_VECTOR_FAIL			E_OP_BASE + 2
+/* program fail */
+#define E_PROG_PROGRAM_FAIL			E_OP_BASE + 3
+/* down ram function fail */
+#define E_DWON_RAMFUNC_FAIL			E_OP_BASE + 4
+/* select chip fail */
+#define	E_SELECT_CHIP_FAIL			E_OP_BASE + 5
+/* read id error */
+#define	E_READID_ERROR				E_OP_BASE + 6
+
+
+
+
+
+
+#endif // !_ERROR_NO_H
