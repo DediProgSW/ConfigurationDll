@@ -1,0 +1,11 @@
+; IcSetNandDll.def : Declares the module parameters for the DLL.
+
+LIBRARY "ConfigNand.dll"
+
+EXPORTS
+    ; Explicit exports can go here
+	Config_Create
+	Config_Destory
+	Config_Show
+	Config_GetNandData
+	Config_InitNandList
