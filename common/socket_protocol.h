@@ -17,7 +17,7 @@
 #define CTRL_ACK				2
 
 //
-#define  MAX_MSG_SIZE				1024*512	//max msg length
+#define  MAX_MSG_SIZE				1024*1024*10	//max msg length
 #define  MAX_TYPE_SIZE				16	//type string max length
 #define  MAX_MANUFACTURE_SIZE			30	//mft string max length
 #define  MAX_PARTNUM_SIZE			50	//partnum string max length

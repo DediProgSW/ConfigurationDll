@@ -3,6 +3,7 @@
 
 /* struct chip_info_c configuration */
 #define CHIPINFO_PTN_CNT        16
+#define	CHIPINFO_PN_LEN	        50	
 
 typedef enum {
 	PROG_MASTERU4,
@@ -10,6 +11,7 @@ typedef enum {
 	PROG_MASTERU8,
 	PROG_MASTERF8,
 	PROG_STAR,
+	PROG_INVALID,
 } prog_type_t;
 
 struct prog_dev {
@@ -57,19 +59,19 @@ struct partition_c {
 };
 
 struct chip_info_c {
-	wchar_t part_name[50];
+	wchar_t part_name[CHIPINFO_PN_LEN];
 	wchar_t type[16];
 	wchar_t manufacturer[30];
 	wchar_t description[20];
-    unsigned long socket_info_cnt;
-    struct socket socket_info[3]; 
+	unsigned long socket_info_cnt;
+	struct socket socket_info[3]; 
 	unsigned long chip_vcc;
 	unsigned long buffer_vcc;
 	unsigned long chip_vpp;
 	unsigned long bus_width;
-    unsigned long erase_time_out;
-    unsigned long program_time_out;
-    unsigned long read_time_out;
+	unsigned long erase_time_out;
+	unsigned long program_time_out;
+	unsigned long read_time_out;
 	unsigned short power_pin[2];
 	unsigned long flash_id_nr;
 	unsigned char flash_id[8];
@@ -84,12 +86,10 @@ struct chip_info_c {
 	wchar_t vector_file[30];
 	wchar_t ram_function_file[30];
 	wchar_t ram_function_transfer_dll[30];
-    wchar_t ic_setting_dlg_dll[30];
-    wchar_t operate_dll[30];
+	wchar_t ic_setting_dlg_dll[30];
+	wchar_t operate_dll[30];
 	unsigned long partition_cnt;
 	struct partition_c partition_info[CHIPINFO_PTN_CNT];
 };
-
-
 
 #endif // !_PROG_INFO_H

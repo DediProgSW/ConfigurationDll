@@ -1,6 +1,8 @@
 #ifndef	_CMD_PROTOCOL_H
 #define	_CMD_PROTOCOL_H
 #include <stdlib.h>
+#include "../Dediprog_bg/svr_config.h"
+#include "loadfile_info.h"
 #include "prog_info.h"
 #include "chip_op_name.h"
 
@@ -89,7 +91,7 @@ struct progress_info {
 /* firmware update */
 struct fw_update_param {
 	int	order_index;
-	wchar_t file_path[MAX_PATH];
+	wchar_t file_path[_MAX_PATH];
 };
 
 struct dev_info {
@@ -101,7 +103,7 @@ struct dev_info {
 };
 
 struct data_file_info {
-	wchar_t path[MAX_PATH];
+	wchar_t path[_MAX_PATH];
 };
 //typedef struct 
 //{
@@ -114,6 +116,7 @@ struct chip_info_param {
 	wchar_t type[16];
 	wchar_t mfg[30];
 	wchar_t part_nr[50];
+	int	free_loadfile;
 };
 
 struct chip_info_res {
@@ -151,7 +154,7 @@ struct folder_info{
 };
 
 struct get_dir_param {
-	wchar_t path[MAX_PATH];
+	wchar_t path[_MAX_PATH];
 	int cnt;
 };
 
@@ -170,6 +173,7 @@ struct operate_result {
 	unsigned short chipindex;
 	unsigned char optype;
 	unsigned int result;
+        unsigned long takes;
 };
 
 struct contact_info {
@@ -236,7 +240,7 @@ struct chip_info_detail {
 enum {
         SOCKET_CMD_BASE = 1000,
 
-        SOCKET_CMD_PROG_ORDER_INIT,     /* init order */
+        SOCKET_CMD_PROG_ORDER_RES,	/* init order */
         SOCKET_CMD_PROG_ORDER_EXCHANGE, /* handle the map from usb index to order index */
 
         SOCKET_CMD_GET_SERVER_VER,      /* get server version */
@@ -264,15 +268,32 @@ enum {
         SOCKET_CMD_GET_FCS_TBL,         /* get the file checksum table */
 	/* new loadfile command */
 	SOCKET_CMD_IMG_SET,		/* set the image tbl */
+	SOCKET_CMD_IMG_GET_SIZE,	/* get the image tbl size */
 	SOCKET_CMD_IMG_GET,		/* get the image tbl */
 	SOCKET_CMD_REGISTER_SET,	/* loadfile register set */
+	SOCKET_CMD_REGISTER_SIZE,	/* loadfile register size */
 	SOCKET_CMD_REGISTER_GET,	/* loadfile register get */
-        SOCKET_CMD_SET_OP_PARAM,                /* set default operation parameter */
-        SOCKET_CMD_SET_IMG_PARAM,               /* set the image parameter */
+        SOCKET_CMD_SET_OP_PARAM,        /* set default operation parameter */
+        SOCKET_CMD_SET_IMG_PARAM,       /* set the image parameter */
+        SOCKET_CMD_SET_IMAGE_PARAM,     /* set the image pararmeter (new loadfile command) */
+        SOCKET_CMD_GET_IMAGE_PARAM_SIZE,/* get the image parameter size(new loadfile command) */
+        SOCKET_CMD_GET_IMAGE_PARAM,     /* get the image parameter */
+	SOCKET_CMD_GET_FILE_ADDRINFO_SIZE,	/* get the file address info */
+	SOCKET_CMD_GET_FILE_ADDRINFO,	/* get the file address info */
+	SOCKET_CMD_GET_FILE_FORMAT_CNT,	/* get the file format table */
+	SOCKET_CMD_GET_FILE_FORMAT_TBL,	/* get the file format table */
+	SOCKET_CMD_GET_ECC_METHOD_CNT,	/* get the ecc method table */
+	SOCKET_CMD_GET_ECC_METHOD_TBL,	/* get the ecc method table */
 
-        SOCKET_CMD_LOADFILE_SET,
-        SOCKET_CMD_LOADFILE_GET_SIZE,   /* loadfile need buff size */
-        SOCKET_CMD_LOADFILE_GET,
+	SOCKET_CMD_GET_OP_PARAM_SIZE,	/* get operation param size */
+	SOCKET_CMD_GET_OP_PARAM,	/* get operation param size */
+	SOCKET_CMD_GET_IMG_PARAM_SIZE,	/* image param */
+	SOCKET_CMD_GET_IMG_PARAM,	/* image param */
+	SOCKET_CMD_SAVE_LOADFILE_SLN,	/* save loadfile sln */
+	SOCKET_CMD_READ_LOADFILE_SLN,	/* read loadfile sln */
+	SOCKET_CMD_LOADFILE_SLN_SIZE,	/* load file size */
+
+        SOCKET_CMD_GET_IMG_CHIP_CHECKSUM,   /* get chip checksum */
 
         SOCKET_CMD_LOAD_PARTITION_TBL = 1600,   /* load the partition table */
         SOCKET_CMD_SAVE_PARTITION_TBL,          /* save the partition table */
@@ -288,6 +309,7 @@ enum {
         SOCKET_CMD_PRJ_START_DEV,       /* project start device */
         SOCKET_CMD_GET_RPJ_INFO,        /* get project information */
         SOCKET_CMD_GET_PRJ_STATUS,      /* get project run status */
+        SOCKET_CMD_GET_PRJ_SITE_STATUS,  /* get project site status */
 
         SOCKET_CMD_SET_BATCH_SETTING = 1800,   /* set the batch setting */
         SOCKET_CMD_GET_BATCH_CNT,       /* get the batch setting */
@@ -308,6 +330,7 @@ enum {
         SOCKET_CMD_PARTT_READ_CHIP,     /* editor read partition chip-file */
         SOCKET_CMD_SAVE_PTN,            /* save partition */
         SOCKET_CMD_GET_OPERATION_STATUS,/* chip operation status */
+	SOCKET_CMD_STOP_OP,		/* stop operation */
 
 
         SOCKET_CMD_SELECT_CHIP = 2100,         /* select chip */
@@ -333,7 +356,12 @@ enum {
         SOCKET_CMD_SET_SN,              /* set progmaster sn */
 
         SOCKET_CMD_GET_DLGDLL_SIZE = 2500, /* get ui dll size */
-        SOCKET_CMD_GET_DLGDLL      = 2600, /* cmd get dll content */
+        SOCKET_CMD_GET_DLGDLL,		/* cmd get dll content */
+
+	SOCKET_CMD_CHKSUM_METHOD_CNT = 2600,	/* checksum method tbl count */
+	SOCKET_CMD_CHKSUM_METHOD_TBL,		/* checksum method tbl */
+
+        SOCKET_CMD_GET_SPEC_PATH = 2700,     /* get desktop path */
 };
 
 #pragma warning(push)
@@ -475,10 +503,12 @@ struct get_bbm_tbl_res {
 struct socket_file_info {
         wchar_t         name[30];           /* memory name */
         wchar_t         type[30];           /* NAND, NOR, MCU */
+		wchar_t         cks_name[30];       /* Check sum alg name*/
+		wchar_t         file_format[30];    /* analys file as format*/
         long long       memory_addr;
         long long       file_offset;
         long long       program_length;
-        wchar_t         file_path[MAX_PATH];
+        wchar_t         file_path[_MAX_PATH];
         wchar_t         sau_name[30];
         unsigned long   is_skip_blank;
         struct {
@@ -523,13 +553,13 @@ struct get_fcs_tbl_param {
 };
 
 struct socket_fcs_item {
-        wchar_t path[MAX_PATH];
+        wchar_t path[_MAX_PATH];
         unsigned long cs;
 };
 
 struct get_fcs_tbl_res {
         int cnt;
-        struct socket_fcs_item  tbl[]; 
+        struct socket_fcs_item	tbl[]; 
 };
 
 #pragma pack(pop)
@@ -562,7 +592,7 @@ struct set_bbm_method_res {
 #pragma pack(push, 1)
 
 struct save_prj_param {
-        wchar_t         path[MAX_PATH];
+        wchar_t         path[_MAX_PATH];
 };
 
 struct save_prj_res {
@@ -608,7 +638,7 @@ struct select_prj_res {
 #pragma pack(push, 1)
 
 struct download_prj_param {
-        wchar_t prj_name[MAX_PATH];
+        wchar_t prj_name[_MAX_PATH];
 };
 
 struct download_prj_res {
@@ -706,13 +736,27 @@ struct get_prj_status_res {
 
 #pragma pack(pop)
 /*---------------------------------------------------------*/
+//SOCKET_CMD_GET_PRJ_SITE_STATUS
+#include "../Dediprog_bg/project_run.h"
+
+#pragma pack(push, 1)
+
+struct get_prj_site_status_param {
+        int order_index;
+        int site_index;
+};
+
+struct get_prj_site_status_res {
+        enum prj_site_status    status;
+};
+
+#pragma pack(pop)
 //SOCKET_CMD_SET_BATCH_SETTING
 #pragma pack(push, 1)
 
 enum start_mode{
-	START_FROM_GUI_BUTTON,
+	START_FROM_MANUAL_MODE,
 	START_FROM_AUTO_DETECTION,
-	START_FROM_PROGRAMMER_BUTTON,
 	START_FROM_HANDLER
 };
 struct socket_op_item {
@@ -722,7 +766,7 @@ struct socket_op_item {
 
 struct set_batch_setting_param {
         int                     op_cnt;
-	    enum start_mode         mode;
+        enum start_mode         mode;
         struct socket_op_item   op_tbl[];	
 };
 
@@ -899,7 +943,7 @@ struct read_partt_file_res {
 struct save_ptn_param {
         int             order_index;
         int             site_index;
-        wchar_t         path[MAX_PATH];
+        wchar_t         path[_MAX_PATH];
         wchar_t         ptn_name[64];
 };
 
@@ -1195,8 +1239,8 @@ struct get_sn_res {
 #pragma pack(push, 1)
 
 struct set_sn_param {
-        int     order_index;
-        unsigned char sn[16];
+        int		order_index;
+        unsigned char	sn[16];
 };
 
 struct set_sn_res {
@@ -1301,10 +1345,90 @@ struct set_op_param_res {
 };
 #pragma pack(pop)
 /*---------------------------------------------------------*/
+
+//SOCKET_CMD_SET_IMAGE_PARAM 
+#pragma pack(push, 1)
+struct set_image_param_param {
+	int	img_index;
+        int     len;
+        unsigned char buff[];
+};
+
+struct set_image_param_res {
+        /* NULL */
+};
+#pragma pack(pop)
+
+/*---------------------------------------------------------*/
+//SOCKET_CMD_GET_IMAGE_PARAM_SIZE,/* get the image parameter size(new loadfile command) */
+//SOCKET_CMD_GET_IMAGE_PARAM,     /* get the image parameter */
+#pragma pack(push, 1)
+struct get_image_param_param {
+        int     img_index;
+};
+
+struct get_image_param_res {
+        int     len;
+        unsigned char buff[];
+};
+
+#pragma pack(pop)
+
+/*---------------------------------------------------------*/
+//SOCKET_CMD_GET_FILE_ADDRINFO_CNT,	/* get the file address info */
+//SOCKET_CMD_GET_FILE_ADDRINFO,	/* get the file address info */
+#pragma pack(push, 1)
+
+struct get_file_addrinfo_param {
+	wchar_t	path[_MAX_PATH];
+	wchar_t format[LOADFILE_FILEFORMAT_LEN];
+};
+
+struct get_file_addrinfo_res {
+	int size;
+	unsigned char buff[];
+};
+
+#pragma pack(pop)
+/*---------------------------------------------------------*/
+//SOCKET_CMD_GET_FILE_FORMAT_CNT,	/* get the file format table */
+//SOCKET_CMD_GET_FILE_FORMAT_TBL,	/* get the file format table */
+#pragma pack(push, 1)
+
+struct get_file_format_tbl_param {
+	/* NULL */
+};
+
+struct get_file_format_tbl_res {
+	int cnt;
+	wchar_t tbl[][LOADFILE_FILEFORMAT_LEN];
+};
+
+#pragma pack(pop)
+
+/*---------------------------------------------------------*/
+//SOCKET_CMD_GET_ECC_METHOD_CNT,	/* get the ecc method table */
+//SOCKET_CMD_GET_ECC_METHOD_TBL,	/* get the ecc method table */
+
+#pragma pack(push, 1)
+
+struct get_ecc_tbl_param {
+	/* NULL */
+};
+
+struct get_ecc_tbl_res {
+	int cnt;
+	wchar_t tbl[][LOADFILE_ECC_LEN];
+};
+
+
+#pragma pack(pop)
+
+/*---------------------------------------------------------*/
 //SOCKET_CMD_SET_IMG_PARAM,               /* set the image parameter */
 #pragma pack(push, 1)
 struct set_img_param_param {
-		wchar_t         name[64];           /* memory name */
+	wchar_t         name[64];           /* memory name */
         wchar_t         type[30];           /* NAND, NOR, MCU */
         long long       memory_addr;        /* memory start program address */
         long long       program_length;     /* program length */
@@ -1317,13 +1441,109 @@ struct set_img_param_res {
 };
 #pragma pack(pop)
 
-/*---------------------------------------------------------*/
-//SOCKET_CMD_GET_DLL_SIZE = 2500, /* get ui dll size */
 
-//SOCKET_CMD_GET_DLL      = 2600, /* cmd get dll content */         
+/*---------------------------------------------------------*/
+//SOCKET_CMD_GET_OP_PARAM_SIZE,	/* get operation param size */
+//SOCKET_CMD_GET_OP_PARAM,	/* get operation param size */
+
+#pragma pack(push, 1)
+
+struct get_op_param_size_param {
+        unsigned int    op;     /* E B P V */
+	    wchar_t         ptn_name[64];
+
+};
+
+struct get_op_param_param {
+        unsigned int    op;     /* E B P V */
+	    wchar_t         ptn_name[64];
+
+};
+
+struct get_op_param_res {
+        /* NULL */
+        int             len;
+        unsigned char   buff[];
+};
+
+#pragma pack(pop)
+
+/*---------------------------------------------------------*/
+//SOCKET_CMD_GET_IMG_PARAM_SIZE,	/* image param */
+//SOCKET_CMD_GET_IMG_PARAM,	/* image param */
+#pragma pack(push, 1)
+
+struct get_img_param_param {
+	wchar_t         name[64];           /* memory name */
+        wchar_t         type[30];           /* NAND, NOR, MCU */
+        long long       memory_addr;        /* memory start program address */
+        long long       program_length;     /* program length */
+};
+
+struct get_img_param_res {
+        int		len;
+        unsigned char	buff[];
+};
+
+#pragma pack(pop)
+
+/*---------------------------------------------------------*/
+//SOCKET_CMD_LOADFILE_SLN_SIZE,	/* load file size */
+#pragma pack(push, 1)
+struct loadfile_sln_size_param {
+	wchar_t		path[MAX_PATH];
+};
+struct loadfile_sln_size_res {
+	unsigned long	size;
+};
+#pragma pack(pop)
+//SOCKET_CMD_SAVE_LOADFILE_SLN,	/* save loadfile sln */
+#pragma pack(push, 1)
+struct save_loadfile_sln_param {
+	wchar_t		path[MAX_PATH];
+	unsigned long	sln_size;
+	unsigned char	sln_buff[];
+};
+struct save_loadfile_sln_res {
+	/* NULL */
+};
+#pragma pack(pop)
+
+/*---------------------------------------------------------*/
+//SOCKET_CMD_READ_LOADFILE_SLN,	/* read loadfile sln */
+#pragma pack(push, 1)
+struct read_loadfile_sln_param {
+	wchar_t		path[MAX_PATH];
+};
+
+struct read_loadfile_sln_res {
+	unsigned long sln_size;
+	unsigned char sln_buff[];
+};
+
+#pragma pack(pop)
+
+/*---------------------------------------------------------*/
+//SOCKET_CMD_GET_IMG_CHIP_CHECKSUM,   /* get chip checksum */
+#pragma pack(push, 1)
+struct get_img_chip_checksum_param {
+        /* NULL */
+};
+
+struct get_img_chip_checksum_res {
+        unsigned long checksum;
+};
+
+#pragma pack(pop)
+
+/*---------------------------------------------------------*/
+//SOCKET_CMD_GET_DLGDLL = 2500, /* get ui dll size */
+
+//SOCKET_CMD_GET_DLGDLL      = 2600, /* cmd get dll content */         
 #pragma pack(push, 1)
 struct get_dlgdll_param {
         /* NULL */
+        int parent_class;
 };
 
 struct get_dlgdll_res {
@@ -1332,6 +1552,32 @@ struct get_dlgdll_res {
 	wchar_t dll_name[128];
         unsigned char buff[];
 };
+#pragma pack(pop)
+/*---------------------------------------------------------*/
+//SOCKET_CMD_CHKSUM_METHOD_CNT = 2600,	/* checksum method tbl count */
+//SOCKET_CMD_CHKSUM_METHOD_TBL,		/* checksum method tbl */
+
+#pragma pack(push, 1)
+
+struct chksum_method_tbl_res {
+	int cnt;
+	wchar_t method[][64];
+};
+
+#pragma pack(pop)
+
+/*---------------------------------------------------------*/
+//SOCKET_CMD_GET_SPEC_PATH
+#pragma pack(push, 1)
+
+struct get_desktop_path_param {
+        wchar_t name[64];
+};
+
+struct get_desktop_path_res {
+        wchar_t path[_MAX_PATH];
+};
+
 #pragma pack(pop)
 /*---------------------------------------------------------*/
 #pragma warning(pop)

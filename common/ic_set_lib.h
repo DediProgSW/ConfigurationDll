@@ -13,8 +13,8 @@ using std::vector;
 
 //emmc
 struct emmc_config{
-	unsigned long addr;
-	unsigned long value;
+	unsigned short addr;
+	unsigned short value;
 };
 //nand
 struct nand_config
@@ -45,8 +45,8 @@ static struct _bbm_tbl{
 {
 	0, _T("NoManagement"),
 	1, _T("Skip Bad Block"),
-	2, _T("RBA+"),
-	3, _T("RBA-"),
+//	2, _T("RBA+"),
+//	3, _T("RBA-"),
 };
 typedef struct _bbm_set{
 	unsigned char BBMType; //0= NoManagement

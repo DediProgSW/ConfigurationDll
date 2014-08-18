@@ -3,6 +3,8 @@
 
 #include "stdafx.h"
 #include <assert.h>
+#include <vector>
+#include "../vm_mgr/vm_mgr.h"
 #include "../common/loadfile_info.h"
 
 
