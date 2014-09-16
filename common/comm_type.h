@@ -65,7 +65,8 @@ typedef int (final_du_t)(
                 vm_ptr_t                                buff,
                 loadfile_item                           **reg,
                 unsigned long                           *chip_checksum,
-                std::vector<struct loadfile_fcs>        &file_checksum
+                std::vector<struct loadfile_fcs>        &file_checksum,
+                const struct loadfile_funcs             *funcs
                 );
  
 

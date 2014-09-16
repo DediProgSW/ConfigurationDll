@@ -22,11 +22,11 @@ struct loadfile_du {
 	long long               image_length;
 	/* actual data length */
 	long long               program_length;
-	/* data crc value */
+	/* data crc value, =du_crc_t(buff, image_length)*/
 	long long               data_crc_value;
-	/* data check sum value */
+	/* data check sum value, =du_checksum_t(buff, program_length) */
 	long long               data_checksum_value;
-	/* image aligned (image_aligned_size) crc */
+	/* image aligned (image_aligned_size) crc, =du_crc_t(buff, image_length) */
 	long long               du_crc;
 	/* follow the last image */
 	int                     follow_last_img;
