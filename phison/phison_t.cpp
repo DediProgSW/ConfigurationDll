@@ -878,11 +878,9 @@ static int handler_WP(unsigned char *buf)
 
         GetLocalTime(&sys);
 
-<<<<<<< HEAD
-        id.my = (sys.wMonth << 4) | ((sys.wYear - 1997)&0x0f);
-=======
+
         id.my = (sys.wMonth << 4) | ((sys.wYear - 1997) & 0xf);
->>>>>>> 31a6c4b9470f2e94eb9a6026cdaba5660e6b0448
+
         err = get_mac(&id.mac);
         if (err < 0)
                 return err;
