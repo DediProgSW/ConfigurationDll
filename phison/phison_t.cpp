@@ -95,11 +95,21 @@ const TCHAR *WP = _T("PhisonWP.bin");
 const TCHAR *FMT =_T("PhisonPreFMT.bin");
 
 
+//#define PS7000
 
-
+#ifdef PS7000
 #define    Manufacture_A_Bin_Size   512*80   //40KB
 #define    Firmware_B_Bin_Size      512*241  //120.5KB
+
+#else
+
+#define    Manufacture_A_Bin_Size   512*161   //40KB
+#define    Firmware_B_Bin_Size      512*417 //120.5KB
+
+#endif
+
 #define	   CLKSET	0x8C
+
 
 
 
@@ -229,7 +239,7 @@ static int CtrlRST(int RSTMode,
 	{
 		if (sram_func(Read, 0, sramtemp, 64, func_param)) return Err_USB;
 		timeout = CACL_TAKES_TIME_END(ctrlrst);
-		if (timeout > TOUT)
+		if (timeout > TOUT*2)
 			return Err_CtrlRST1;
 	}
 	if(sramtemp[8]&0x4000)
@@ -440,10 +450,13 @@ static int WriteVerifyCode(unsigned char *buff,
 		//return Err_USB;
 	//if(fifo_func(Write,buff+512,len-512,func_param))
 		//return Err_USB;
+	log_add("site %d,phison isp fifo start", ((int *)func_param)[1]);
 	if (fifo_wr(512, data_buf, reg_func, fifo_func, func_param))
 		return Err_USB;
 	if (fifo_wr(len - 512, buff + 512, reg_func, fifo_func, func_param))
 		return Err_USB;
+
+	log_add("site %d,phison isp fifo OK", ((int *)func_param)[1]);
 
 	CACL_TAKES_TIME_BEGIN(ctrlrst);
 	unsigned int timeout = 0;
@@ -451,13 +464,14 @@ static int WriteVerifyCode(unsigned char *buff,
 	{
 		if (sram_func(Read, 0, sramtemp, 64, func_param)) return Err_USB;
 		timeout = CACL_TAKES_TIME_END(ctrlrst);
-		if (timeout > TOUT)
+		if (timeout > TOUT*2)
 			return Err_CtrlRST1;
 	}
 	if(sramtemp[8]&0x4000)
 		return Err_ProgISP;	
 	
-	//verify
+	log_add("site %d,phison isp write OK", ((int *)func_param)[1]);
+
 	memset(sramtemp,0,512);
 	sramtemp[0]=0x8;
 	sramtemp[3]=len/512;
@@ -472,10 +486,13 @@ static int WriteVerifyCode(unsigned char *buff,
 		//return Err_USB;
 	//if(fifo_func(Write,buff+512,len-512,func_param))
 		//return Err_USB;
+	log_add("site %d,phison isp verify fifo start", ((int *)func_param)[1]);
 	if (fifo_wr(512, data_buf, reg_func, fifo_func, func_param))
 		return Err_USB;
 	if (fifo_wr(len - 512, buff + 512, reg_func, fifo_func, func_param))
 		return Err_USB;
+
+	log_add("site %d,phison isp verify fifo OK", ((int *)func_param)[1]);
 
 	CACL_TAKES_TIME_BEGIN(ctrlrst1);
 	timeout = 0;
@@ -483,12 +500,15 @@ static int WriteVerifyCode(unsigned char *buff,
 	{
 		if (sram_func(Read, 0, sramtemp, 64, func_param)) return Err_USB;
 		timeout = CACL_TAKES_TIME_END(ctrlrst1);
-		if (timeout > TOUT)
+		if (timeout > TOUT*2)
 			return Err_CtrlRST1;
 	}
+
+
+	log_add("site %d,phison isp verify result: %x", ((int *)func_param)[1],sramtemp[8]);
 	if(sramtemp[8]&0x4000)
 		return Err_ProgISP;	
-
+	log_add("site %d,phison isp verify ok", ((int *)func_param)[1]);
 	return 0;
 }
 
@@ -758,6 +778,8 @@ static int read_HW(unsigned char *buf,unsigned int *len, const TCHAR *PhisonHW)
 	if(buf[0]!='H' || buf[1]!='V' || buf[2]!= '5' || buf[3]!='0')
 		return Err_FileFMT;
 
+	buf[495] = 0x02;	//good card mark
+
 	return 0;
 }
 
@@ -856,7 +878,7 @@ static int handler_WP(unsigned char *buf)
 
         GetLocalTime(&sys);
 
-        id.my = (sys.wMonth << 4) | (sys.wYear - 1997);
+        id.my = (sys.wMonth << 4) | ((sys.wYear - 1997)&0x0f);
         err = get_mac(&id.mac);
         if (err < 0)
                 return err;
@@ -1061,6 +1083,8 @@ int prepare_init(
                 goto end;
 		//return Err_VerifyISP;
         }
+
+	log_add("site %d,Phison ISP W&V OK", ((int *)func_param)[1]);
 	//set clock;
 	regvalue=0xFC;
 	reg_func(Write,0x12,&regvalue,func_param);
