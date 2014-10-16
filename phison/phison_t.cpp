@@ -856,7 +856,7 @@ static int handler_WP(unsigned char *buf)
 
         GetLocalTime(&sys);
 
-        id.my = (sys.wMonth << 4) | (sys.wYear - 1997);
+        id.my = (sys.wMonth << 4) | ((sys.wYear - 1997) & 0xf);
         err = get_mac(&id.mac);
         if (err < 0)
                 return err;
