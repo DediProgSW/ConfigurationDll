@@ -103,8 +103,8 @@ const TCHAR *FMT =_T("PhisonPreFMT.bin");
 
 #else
 
-#define    Manufacture_A_Bin_Size   512*161   //40KB
-#define    Firmware_B_Bin_Size      512*417 //120.5KB
+#define    Manufacture_A_Bin_Size   512*161   
+#define    Firmware_B_Bin_Size      512*417 
 
 #endif
 
@@ -740,6 +740,7 @@ static int read_PreFMT(unsigned char *buf,unsigned int *len, const TCHAR *Phison
 static int read_HW(unsigned char *buf,unsigned int *len, const TCHAR *PhisonHW)
 {
        	HANDLE hFile;
+		SYSTEMTIME sys;
 	unsigned int uiFileSize;
         
         unsigned long cnt;
@@ -779,6 +780,11 @@ static int read_HW(unsigned char *buf,unsigned int *len, const TCHAR *PhisonHW)
 		return Err_FileFMT;
 
 	buf[495] = 0x02;	//good card mark
+
+	GetLocalTime(&sys);
+	buf[502] = ((sys.wYear & 0x0f) << 4) | (sys.wMonth & 0x0f);
+	buf[503] = sys.wDay;
+
 
 	return 0;
 }
