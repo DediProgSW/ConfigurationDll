@@ -81,13 +81,17 @@ const struct loadfile_funcs             *funcs) {
 
 int read_reg(
                 const struct chip_info_c        *chip,
-                struct loadfile_item            *reg,
-                int (*read) (
+                unsigned char                   *reg,
+                int                             reg_len,
+                int (*read)(
                         const struct chip_info_c *chip,
-                        unsigned char *buff,
-                        int len,
-                        void *param
-                        ),
+                        int             ptn_index,
+                        unsigned long long start,
+                        unsigned char   *buff,
+                        int             len,
+                        int             timeout,
+                        void            *param
+                ),
                 void                            *read_param
                 )
 {
