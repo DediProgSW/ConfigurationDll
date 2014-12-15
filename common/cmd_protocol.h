@@ -1,7 +1,6 @@
 #ifndef	_CMD_PROTOCOL_H
 #define	_CMD_PROTOCOL_H
 #include <stdlib.h>
-#include "../Dediprog_bg/svr_config.h"
 #include "loadfile_info.h"
 #include "prog_info.h"
 #include "chip_op_name.h"
@@ -31,8 +30,6 @@
 #define CTRL_CMD_GET_FILE_LIST				CTRL_CMD_BASE + 21
 #define CTRL_CMD_SET_FILE				CTRL_CMD_BASE + 22
 #define CTRL_CMD_SET_BATCH_DEVICE			CTRL_CMD_BASE + 23
-#define	CTRL_CMD_GET_DIR_CNT				CTRL_CMD_BASE + 24
-#define	CTRL_CMD_GET_DIR_CONTENT			CTRL_CMD_BASE + 25
 #define	CTRL_CMD_CREATE_PROJECT				CTRL_CMD_BASE + 26
 #define	CTRL_CMD_FIRMWARE_UPDATE			CTRL_CMD_BASE + 27
 #define CTRL_CMD_CLIENT_LOGIN				CTRL_CMD_BASE + 50
@@ -88,9 +85,21 @@ struct progress_info {
 	unsigned int result;
 };
 
+struct socket_uniquekey_info {
+        int err_code;
+        wchar_t err_msg[4096];
+};
+
+struct socket_uniquekey_curr {
+        int     order_index;
+        int     site_index;
+        wchar_t data[128];
+};
+
 /* firmware update */
 struct fw_update_param {
 	int	order_index;
+        int     lcd;            /* 1 --> lcd, 0 --> programmer */
 	wchar_t file_path[_MAX_PATH];
 };
 
@@ -105,12 +114,6 @@ struct dev_info {
 struct data_file_info {
 	wchar_t path[_MAX_PATH];
 };
-//typedef struct 
-//{
-//      unsigned char           state;
-//      unsigned char           id_num;
-//      unsigned char           id_code[8];
-//}chip_id_info;
 
 struct chip_info_param {
 	wchar_t type[16];
@@ -147,12 +150,6 @@ typedef struct {
 
 
 
-struct folder_info{
-        unsigned long long size;
-	wchar_t file_name[64];
-	int is_dir;
-};
-
 struct get_dir_param {
 	wchar_t path[_MAX_PATH];
 	int cnt;
@@ -176,62 +173,6 @@ struct operate_result {
         unsigned long takes;
 };
 
-struct contact_info {
-	unsigned short pin_mask[4];
-	unsigned long pin_max_volt;
-	unsigned long pin_min_volt;
-};
-
-struct memory_info {
-	wchar_t display_name[16];
-	wchar_t type[20];
-	unsigned long long start_program_addr;
-	unsigned long long size_in_bytes;
-	unsigned long page_size_in_byte;
-	unsigned long block_size_in_byte;
-	unsigned long sector_size_in_byte;
-	unsigned long erase_parameter;
-	unsigned long read_parameter;
-	unsigned long program_parameter;
-	unsigned long unprotect_parameter;
-	unsigned long protect_parameter;
-	unsigned long option_cmd1;
-	unsigned long option_cmd2;
-	unsigned long timing;
-	unsigned long rev[4];
-	wchar_t rev_str[4][20];
-};
-
-struct chip_info_detail {
-	wchar_t part_name[50];
-	wchar_t type[16];
-	wchar_t manufacturer[30];
-	wchar_t description[20];
-	wchar_t socket_adpator[40];
-	wchar_t ordering_info[16];
-	unsigned long chip_vcc;
-	unsigned long buffer_vcc;
-	unsigned long chip_vpp;
-	unsigned long bus_width;
-	unsigned short power_pin[2];
-	unsigned long flash_id_nr;
-	unsigned char flash_id[8];
-	unsigned long contact_test_nr;
-	contact_info chip_contact[5];
-
-	wchar_t fpga_fw_x4[30];
-	wchar_t fpga_fw_x8[30];
-	wchar_t fpga_fw_starprog[30];
-	wchar_t fpga_universal_cartridge_x4[30];
-	wchar_t fpga_universal_cartridge_x8a[30];
-	wchar_t fpga_universal_cartridge_x8b[30];
-	wchar_t vector_file[30];
-	wchar_t ram_function_file[30];
-	wchar_t ram_function_transfer_dll[30];
-	unsigned long memory_cnt;
-	memory_info memory_info[8];
-};
-
 #pragma pack( pop )
 
 /*--------------------New SW Framework Command-----------------------------------*/
@@ -242,13 +183,18 @@ enum {
 
         SOCKET_CMD_PROG_ORDER_RES,	/* init order */
         SOCKET_CMD_PROG_ORDER_EXCHANGE, /* handle the map from usb index to order index */
+        SOCKET_CMD_SET_AUTO_STARTUP,    /* set auto startup */
+        SOCKET_CMD_GET_AUTO_STARTUP,    /* get auto startup status */
+
 
         SOCKET_CMD_GET_SERVER_VER,      /* get server version */
 	SOCKET_CMD_CHECK_SOCKET,	/* get socket status */
+        SOCKET_CMD_DOWN_DEFAULT_FPGA,   /* down default fpga into spi flash */
+        SOCKET_CMD_CHECK_DEFAULT_FPGA,  /* check default fpga if downed into spi flash */
 
-        SOCKET_CMD_GET_MFG_CNT = 1100,         /* get mfg cnt */
-        SOCKET_CMD_GET_MFG_TBL,         /* get mfg tbl */
+        SOCKET_CMD_GET_MFG_TBL = 1100,  /* get mfg tbl */
         SOCKET_CMD_GET_CONFIGFILE_VER,  /* get config file version, create time */
+        SOCKET_CMD_GET_PN_TBL,          /* get part number tbl */
 
 
         SOCKET_CMD_GET_PARTITION_CNT = 1200,   /* get the memory count */
@@ -362,6 +308,16 @@ enum {
 	SOCKET_CMD_CHKSUM_METHOD_TBL,		/* checksum method tbl */
 
         SOCKET_CMD_GET_SPEC_PATH = 2700,     /* get desktop path */
+
+        SOCKET_CMD_SET_UNIQUEKEY_ADDR = 2800,   /* set unique key address info */
+        SOCKET_CMD_GET_UNIQUEKEY_ADDR,          /* get unique key address info */
+        SOCKET_CMD_SET_UNIQUEKEY_DATA,          /* set unique key data */
+        SOCKET_CMD_GET_UNIQUEKEY_DATA,          /* get unique key data */
+        SOCKET_CMD_GET_UNIQUEKEY_TBL,           /* get unique key third tbl */
+        SOCKET_CMD_GET_UNIQUEKEY_DLL_SIZE,      /* get unique key dll size */
+        SOCKET_CMD_GET_UNIQUEKEY_DLL,           /* get unique key dll */
+
+        SOCKET_CMD_GET_DIR_CONTENT = 2900,      /* get file content */
 };
 
 #pragma warning(push)
@@ -417,6 +373,70 @@ struct check_socket_res {
 	/* NULL */
 };
 
+
+#pragma pack(pop)
+
+/*---------------------------------------------------------*/
+//SOCKET_CMD_DOWN_DEFAULT_FPGA
+#pragma pack(push, 1)
+struct down_default_fpga_param {
+	int order_index;
+};
+
+struct down_default_fpga_res {
+	/* NULL */
+};
+
+#pragma pack(pop)
+
+/*---------------------------------------------------------*/
+//SOCKET_CMD_CHECK_DEFAULT_FPGA
+#pragma pack(push, 1)
+struct check_default_fpga_param {
+	int order_index;
+};
+
+struct check_default_fpga_res {
+        int status;     /* if order_index == -1, bit0 ~ bit7 identify the device0 ~ device7, 1 --> is downed, 0 --> not be downed 
+                         * if order_inded == 0 ~ 256, always bit0 indentify the device is be downed default fpga 
+                         */
+};
+
+#pragma pack(pop)
+
+/*---------------------------------------------------------*/
+//SOCKET_CMD_GET_MFG_TBL = 1100,  /* get mfg cnt */
+#pragma pack(push, 1)
+
+struct socket_get_mfg_tbl_param {
+        int svr_use;
+        int cnt;
+        wchar_t type[CHIPINFO_TYPE_LEN];
+};
+
+struct socket_get_mfg_tbl_res {
+        int svr_use;
+        int cnt;
+        wchar_t tbl[][CHIPINFO_MFG_LEN];
+};
+
+#pragma pack(pop)
+/*---------------------------------------------------------*/
+//SOCKET_CMD_GET_PN_TBL,          /* get part number tbl */
+#pragma pack(push, 1)
+
+struct socket_get_pn_tbl_param {
+        int svr_use;
+        int cnt;
+        wchar_t type[CHIPINFO_TYPE_LEN];
+        wchar_t mfg[CHIPINFO_MFG_LEN];
+};
+
+struct socket_get_pn_tbl_res {
+        int svr_use;
+        int cnt;
+        struct chip_rough_info tbl[];
+};
 
 #pragma pack(pop)
 /*---------------------------------------------------------*/
@@ -1580,6 +1600,175 @@ struct get_desktop_path_res {
 
 #pragma pack(pop)
 /*---------------------------------------------------------*/
+//SOCKET_CMD_SET_UNIQUEKEY_ADDR
+#pragma pack(push, 1)
+
+enum socket_uniquekey_mode {
+        SOCKET_UNIQUEKEY_MANUAL,
+        SOCKET_UNIQUEKEY_FILE,
+        SOCKET_UNIQUEKEY_THIRD,
+};
+
+enum socket_uniquekey_endian {
+        SOCKET_UNIQUEKEY_BIG,
+        SOCKET_UNIQUEKEY_LITTLE,
+};
+enum socket_uniquekey_radix {
+        SOCKET_UNIQUEKEY_HEX,
+        SOCKET_UNIQUEKEY_DEC,
+        SOCKET_UNIQUEKEY_BCD,
+};
+
+struct socket_uniquekey_addr {
+        enum socket_uniquekey_mode      mode;
+        wchar_t                         ptn_name[CHIPINFO_PTN_LEN];
+        unsigned long long              start_addr;
+        unsigned long                   len;
+        wchar_t                         sample_key[_MAX_PATH];
+        union {
+                struct {
+                        int reuse_failed_key;
+                } file;
+                struct {
+                        int roll_sn;
+                        int step;       /* always should be positive */
+                        enum socket_uniquekey_endian       endian;
+                } manual;
+                struct {
+                        wchar_t name[UNIQUEKEY_THIRD_NAME_LEN];
+                } third;
+        }; 
+};
+
+struct socket_set_uniquekey_addr_param {
+	int                                     enable;
+        struct socket_uniquekey_addr            info;
+};
+
+struct socket_set_uniquekey_addr_res {
+        /* NULL */
+};
+
+#pragma pack(pop)
+/*---------------------------------------------------------*/
+//SOCKET_CMD_GET_UNIQUEKEY_ADDR,          /* get unique key address info */
+#pragma pack(push, 1)
+
+struct socket_get_uniquekey_addr_param {
+        /* NULL */
+};
+
+struct socket_get_uniquekey_addr_res {
+	int                                     enable;
+	struct socket_uniquekey_addr            info;
+};
+
+#pragma pack(pop)
+/*---------------------------------------------------------*/
+//SOCKET_CMD_SET_UNIQUEKEY_DATA,          /* set unique key data */
+#pragma pack(push, 1)
+
+struct socket_uniquekey_data {
+        enum socket_uniquekey_mode      mode;
+        union {
+                struct {
+                        wchar_t key_folder[_MAX_PATH];
+                } file;
+
+                struct {
+                        enum socket_uniquekey_radix radix;
+                        unsigned char start[16];
+                        unsigned char end[16];
+                } manual;
+
+                struct {
+                        wchar_t name[UNIQUEKEY_THIRD_NAME_LEN];
+                        int size;
+                        unsigned char buff[1024];
+                } third;
+        } info;
+};
+
+struct socket_set_uinquekey_data_param {
+        struct socket_uniquekey_data    data;
+};
+
+struct socket_set_uniquekey_data_res {
+        wchar_t msg[4096];
+};
+
+#pragma pack(pop)
+/*---------------------------------------------------------*/
+//SOCKET_CMD_GET_UNIQUEKEY_DATA,          /* get unique key data */
+#pragma pack(push, 1)
+
+struct socket_get_uinquekey_data_param {
+        /* NULL */
+};
+
+struct socket_get_uniquekey_data_res {
+        struct socket_uniquekey_data    data;
+};
+
+#pragma pack(pop)
+/*---------------------------------------------------------*/
+//SOCKET_CMD_GET_UNIQUEKEY_TBL
+
+#pragma pack(push, 1)
+struct get_uniquekey_tbl_param {
+        int     cnt;
+};
+
+struct get_uniquekey_tbl_res {
+        int     cnt;
+        wchar_t tbl[][UNIQUEKEY_THIRD_NAME_LEN];
+};
+
+#pragma pack(pop)
+
+
+/*---------------------------------------------------------*/
+//SOCKET_CMD_GET_UNIQUEKEY_DLL_SIZE,      /* get unique key dll size */
+//SOCKET_CMD_GET_UNIQUEKEY_DLL,           /* get unique key dll */
+
+#pragma pack(push, 1)
+struct get_uniquekey_dll_param {
+        wchar_t name[UNIQUEKEY_THIRD_NAME_LEN];
+};
+
+struct get_uniquekey_dll_res {
+        int len;
+        unsigned char buff[];
+};
+
+#pragma pack(pop)
+
+
+/*---------------------------------------------------------*/
+//SOCKET_CMD_GET_DIR_CONTENT = 2900,      /* get file content */
+#pragma pack(push, 1)
+
+struct socket_dir_item {
+        unsigned long long size;
+	wchar_t file_name[_MAX_PATH];
+	int is_dir;
+};
+
+struct socket_get_dir_content_param {
+        unsigned long   svr_use;        /* first call init it to -1 */
+        int             cnt;            /* want to read dir content */
+	wchar_t path[_MAX_PATH];
+};
+
+struct socket_get_dir_content_res {
+        unsigned long   svr_use;
+        int             cnt;
+        struct socket_dir_item dir_tbl[];
+};
+
+#pragma pack(pop)
+/*---------------------------------------------------------*/
+
 #pragma warning(pop)
 
 

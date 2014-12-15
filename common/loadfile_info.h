@@ -10,6 +10,10 @@
 #define	LOADFILE_ECC_LEN			64
 #define LOADFILE_FILEFORMAT_LEN                 64
 
+#define LOADFILE_FLAG_FOLLOW_MASK               (1 << 0)
+#define LOADFILE_FLAG_AFTER_MASK                (1 << 1)
+#define LOADFILE_FLAG_BEFORE_MASK               (1 << 2)
+
 struct loadfile_du {
 	unsigned long           img_index;
 	/* memory partition, like Boot0, Boot1, User Area */
@@ -29,7 +33,7 @@ struct loadfile_du {
 	/* image aligned (image_aligned_size) crc, =du_crc_t(buff, image_length) */
 	long long               du_crc;
 	/* follow the last image */
-	int                     follow_last_img;
+	int                     flag;
 	/* E B P V NRE */
 	unsigned short          operate[2];
 	unsigned long           ptn_index;
@@ -106,7 +110,7 @@ typedef int (loadfile_progress_t)(
 *       the negative is error code(such as -10, 10 is the error code), zero is success, larger than zero is the buff size it need
 */
 typedef int (img_info_t)(const wchar_t *path, unsigned char *buff, unsigned long buff_size);
-
+/* loadfile overloapped interface structure, only can be add memeber, not allow to del the member */
 struct loadfile_funcs {
 	int(*get_analyze_func) (const wchar_t *method, struct loadfile_file_analyze_funcs *func);
 	loadfile_file_checksum_t        *(*get_file_checksum_func) (const wchar_t *method);

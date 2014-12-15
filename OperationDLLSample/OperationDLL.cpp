@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include <assert.h>
 #include <vector>
+#include "../common/comm_type.h"
 #include "../vm_mgr/vm_mgr.h"
 #include "../common/loadfile_info.h"
 
@@ -77,3 +78,28 @@ const struct loadfile_funcs             *funcs) {
 	printf("\\final_du\n");
 	return 0;
 }
+
+typedef int (read_reg_t)(
+                const struct chip_info_c        *chip,
+                struct loadfile_item            *reg,
+                int (*read) (
+                        const struct chip_info_c *chip,
+                        unsigned char *buff,
+                        int len,
+                        void *param
+                        ),
+                void                            *read_param
+                )
+{
+        assert(chip);
+        assert(reg);
+        assert(read);
+        assert(read_param);
+
+
+
+        return 0;
+}
+
+
+

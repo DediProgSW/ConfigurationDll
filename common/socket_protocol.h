@@ -8,7 +8,10 @@
 #define CTRL_NOTIFY_BATCH_RESULT			CTRL_NOTIFY_BASE + 3
 #define CTRL_NOTIFY_PROGRESS_BATCH			CTRL_NOTIFY_BASE + 4
 #define CTRL_NOTIFY_OPERATE_RESULT			CTRL_NOTIFY_BASE + 5
-#define CTRL_NOTIFY_DEVICE_LOST             CTRL_NOTIFY_BASE + 6
+#define CTRL_NOTIFY_DEVICE_LOST                         CTRL_NOTIFY_BASE + 6
+#define CTRL_NOTIFY_UNIQUEKEY_SERIALNUM                 CTRL_NOTIFY_BASE + 7
+#define CTRL_NOTIFY_UNIQUEKEY_CURRENT                   CTRL_NOTIFY_BASE + 8
+
 
 //message type
 #define CTRL_VERSION				0x0100
@@ -17,7 +20,7 @@
 #define CTRL_ACK				2
 
 //
-#define  MAX_MSG_SIZE				1024*1024*10	//max msg length
+#define  MAX_MSG_SIZE				1024*1024*20	//max msg length
 #define  MAX_TYPE_SIZE				16	//type string max length
 #define  MAX_MANUFACTURE_SIZE			30	//mft string max length
 #define  MAX_PARTNUM_SIZE			50	//partnum string max length

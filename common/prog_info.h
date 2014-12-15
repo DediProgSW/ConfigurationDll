@@ -2,17 +2,31 @@
 #define	_PROG_INFO_H
 
 /* struct chip_info_c configuration */
-#define CHIPINFO_PTN_CNT        16
-#define	CHIPINFO_PN_LEN	        50	
+#define CHIPINFO_PTN_CNT                16
+#define CHIPINFO_TYPE_LEN               20
+#define	CHIPINFO_PN_LEN	                50
+#define CHIPINFO_PTN_LEN                64
+#define CHIPINFO_MFG_LEN                30
+#define CHIPINFO_DESC_LEN               20
+#define UNIQUEKEY_THIRD_NAME_LEN        64
 
 typedef enum {
 	PROG_MASTERU4,
 	PROG_MASTERF4,
 	PROG_MASTERU8,
 	PROG_MASTERF8,
-	PROG_STAR,
+	PROG_STAR_U,
+        PROG_STAR_F,
+        PROG_STAR_ATE,
 	PROG_INVALID,
 } prog_type_t;
+
+struct chip_rough_info {
+        int     family_index;
+	wchar_t ic_type[16];
+	wchar_t mfg[30];
+	wchar_t part_nr[50];
+};
 
 struct prog_dev {
 	prog_type_t type;
