@@ -79,7 +79,7 @@ const struct loadfile_funcs             *funcs) {
 	return 0;
 }
 
-typedef int (read_reg_t)(
+int read_reg(
                 const struct chip_info_c        *chip,
                 struct loadfile_item            *reg,
                 int (*read) (
