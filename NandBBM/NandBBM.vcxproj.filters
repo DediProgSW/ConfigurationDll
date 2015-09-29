@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Nand">
+      <UniqueIdentifier>{f6b72cc9-07d3-4b6c-be09-7fcce4a258cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Nand">
+      <UniqueIdentifier>{089b0cab-55fc-4de9-9abb-f33a97fad35a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="zstring.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NAND\include\getopt.h">
+      <Filter>Header Files\Nand</Filter>
+    </ClInclude>
+    <ClInclude Include="NAND\include\nand.h">
+      <Filter>Header Files\Nand</Filter>
+    </ClInclude>
+    <ClInclude Include="NAND\include\nand_bbt.h">
+      <Filter>Header Files\Nand</Filter>
+    </ClInclude>
+    <ClInclude Include="NAND\include\nand_driver.h">
+      <Filter>Header Files\Nand</Filter>
+    </ClInclude>
+    <ClInclude Include="NAND\include\nand_ecc.h">
+      <Filter>Header Files\Nand</Filter>
+    </ClInclude>
+    <ClInclude Include="NAND\include\nand_io.h">
+      <Filter>Header Files\Nand</Filter>
+    </ClInclude>
+    <ClInclude Include="NAND\include\nand_io_bbt.h">
+      <Filter>Header Files\Nand</Filter>
+    </ClInclude>
+    <ClInclude Include="NAND\include\nand_io_ecc.h">
+      <Filter>Header Files\Nand</Filter>
+    </ClInclude>
+    <ClInclude Include="NAND\include\stmnand.h">
+      <Filter>Header Files\Nand</Filter>
+    </ClInclude>
+    <ClInclude Include="NAND\include\xprintf.h">
+      <Filter>Header Files\Nand</Filter>
+    </ClInclude>
+    <ClInclude Include="NAND\lib\bch_c_parameters.h">
+      <Filter>Header Files\Nand</Filter>
+    </ClInclude>
+    <ClInclude Include="NAND\lib\bch_decoder.h">
+      <Filter>Header Files\Nand</Filter>
+    </ClInclude>
+    <ClInclude Include="NAND\lib\bch_encoder.h">
+      <Filter>Header Files\Nand</Filter>
+    </ClInclude>
+    <ClInclude Include="NAND\lib\gf_precomputed.h">
+      <Filter>Header Files\Nand</Filter>
+    </ClInclude>
+    <ClInclude Include="NAND\lib\hamming_ecc.h">
+      <Filter>Header Files\Nand</Filter>
+    </ClInclude>
+    <ClInclude Include="NAND\lib\nand_ecc_bch.h">
+      <Filter>Header Files\Nand</Filter>
+    </ClInclude>
+    <ClInclude Include="NAND\lib\nand_ecc_hamming.h">
+      <Filter>Header Files\Nand</Filter>
+    </ClInclude>
+    <ClInclude Include="NAND\lib\nand_io_mtd.h">
+      <Filter>Header Files\Nand</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="zstring.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NandBBM.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NAND\lib\bch_decoder.cpp">
+      <Filter>Source Files\Nand</Filter>
+    </ClCompile>
+    <ClCompile Include="NAND\lib\bch_encoder.cpp">
+      <Filter>Source Files\Nand</Filter>
+    </ClCompile>
+    <ClCompile Include="NAND\lib\hamming_ecc.cpp">
+      <Filter>Source Files\Nand</Filter>
+    </ClCompile>
+    <ClCompile Include="NAND\lib\misc.cpp">
+      <Filter>Source Files\Nand</Filter>
+    </ClCompile>
+    <ClCompile Include="NAND\lib\nand.cpp">
+      <Filter>Source Files\Nand</Filter>
+    </ClCompile>
+    <ClCompile Include="NAND\lib\nand_bbt.cpp">
+      <Filter>Source Files\Nand</Filter>
+    </ClCompile>
+    <ClCompile Include="NAND\lib\nand_bbt_inband.cpp">
+      <Filter>Source Files\Nand</Filter>
+    </ClCompile>
+    <ClCompile Include="NAND\lib\nand_bbt_linux.cpp">
+      <Filter>Source Files\Nand</Filter>
+    </ClCompile>
+    <ClCompile Include="NAND\lib\nand_ecc.cpp">
+      <Filter>Source Files\Nand</Filter>
+    </ClCompile>
+    <ClCompile Include="NAND\lib\nand_ecc_bch.cpp">
+      <Filter>Source Files\Nand</Filter>
+    </ClCompile>
+    <ClCompile Include="NAND\lib\nand_ecc_hamming.cpp">
+      <Filter>Source Files\Nand</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

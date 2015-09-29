@@ -23,14 +23,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{E0C5413D-50AF-4983-A562-8294412DA126}</ProjectGuid>
+    <ProjectGuid>{C7061489-5325-465E-BC09-7FE1CCAFE196}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>phison_t</RootNamespace>
+    <RootNamespace>NandBBM</RootNamespace>
     <SccProjectName>SAK</SccProjectName>
     <SccAuxPath>SAK</SccAuxPath>
     <SccLocalPath>SAK</SccLocalPath>
     <SccProvider>SAK</SccProvider>
-    <ProjectName>phison</ProjectName>
+    <ProjectName>NandBBM</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -87,6 +87,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)$(Configuration)\Server\ICSupport\Binary</OutDir>
+    <IncludePath>D:\Project\GitHub\ConfigurationDll\NandBBM;D:\Project\GitHub\ConfigurationDll\NandBBM\NAND\lib;D:\Project\GitHub\ConfigurationDll\NandBBM\NAND\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Test_Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -100,13 +101,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_XP|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)$(Configuration)\Server\ICSupport\Binary\</OutDir>
+    <IncludePath>D:\Project\GitHub\ConfigurationDll\NandBBM\NAND\lib;D:\Project\GitHub\ConfigurationDll\NandBBM\NAND\include;D:\Project\GitHub\ConfigurationDll\NandBBM;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;PHISON_T_EXPORTS;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;NandBBM_T_EXPORTS;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <BrowseInformation>true</BrowseInformation>
     </ClCompile>
@@ -125,7 +127,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;PHISON_T_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;NandBBM_T_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <BrowseInformation>true</BrowseInformation>
     </ClCompile>
@@ -144,7 +146,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;PHISON_T_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;NandBBM_T_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
@@ -159,7 +161,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;PHISON_T_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;NandBBM_T_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
@@ -176,7 +178,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;PHISON_T_EXPORTS;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;NandBBM_T_EXPORTS;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <BrowseInformation>true</BrowseInformation>
     </ClCompile>
@@ -197,6 +199,24 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="NAND\include\getopt.h" />
+    <ClInclude Include="NAND\include\nand.h" />
+    <ClInclude Include="NAND\include\nand_bbt.h" />
+    <ClInclude Include="NAND\include\nand_driver.h" />
+    <ClInclude Include="NAND\include\nand_ecc.h" />
+    <ClInclude Include="NAND\include\nand_io.h" />
+    <ClInclude Include="NAND\include\nand_io_bbt.h" />
+    <ClInclude Include="NAND\include\nand_io_ecc.h" />
+    <ClInclude Include="NAND\include\stmnand.h" />
+    <ClInclude Include="NAND\include\xprintf.h" />
+    <ClInclude Include="NAND\lib\bch_c_parameters.h" />
+    <ClInclude Include="NAND\lib\bch_decoder.h" />
+    <ClInclude Include="NAND\lib\bch_encoder.h" />
+    <ClInclude Include="NAND\lib\gf_precomputed.h" />
+    <ClInclude Include="NAND\lib\hamming_ecc.h" />
+    <ClInclude Include="NAND\lib\nand_ecc_bch.h" />
+    <ClInclude Include="NAND\lib\nand_ecc_hamming.h" />
+    <ClInclude Include="NAND\lib\nand_io_mtd.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="zstring.h" />
@@ -219,7 +239,18 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_XP|Win32'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="phison_t.cpp" />
+    <ClCompile Include="NandBBM.cpp" />
+    <ClCompile Include="NAND\lib\bch_decoder.cpp" />
+    <ClCompile Include="NAND\lib\bch_encoder.cpp" />
+    <ClCompile Include="NAND\lib\hamming_ecc.cpp" />
+    <ClCompile Include="NAND\lib\misc.cpp" />
+    <ClCompile Include="NAND\lib\nand.cpp" />
+    <ClCompile Include="NAND\lib\nand_bbt.cpp" />
+    <ClCompile Include="NAND\lib\nand_bbt_inband.cpp" />
+    <ClCompile Include="NAND\lib\nand_bbt_linux.cpp" />
+    <ClCompile Include="NAND\lib\nand_ecc.cpp" />
+    <ClCompile Include="NAND\lib\nand_ecc_bch.cpp" />
+    <ClCompile Include="NAND\lib\nand_ecc_hamming.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Test_Debug|Win32'">Create</PrecompiledHeader>
@@ -228,9 +259,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_XP|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="zstring.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\NandBBM\NandBBM.vcxproj.filters" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
